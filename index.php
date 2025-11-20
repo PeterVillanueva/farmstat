@@ -20,10 +20,15 @@ $router->post('/login', 'AuthController', 'login');
 $router->get('/register', 'AuthController', 'register');
 $router->post('/register', 'AuthController', 'register');
 $router->get('/logout', 'AuthController', 'logout');
+$router->get('/api/auth/check', 'AuthController', 'checkAuth');
 
 // Dashboard routes
 $router->get('/dashboard', 'DashboardController', 'index');
 $router->get('/admin/dashboard', 'DashboardController', 'admin');
+$router->get('/admin/users', 'AdminController', 'users');
+$router->get('/admin/farmers', 'AdminController', 'farmers');
+$router->get('/admin/campaigns', 'AdminController', 'campaigns');
+$router->get('/api/dashboard', 'DashboardController', 'apiData');
 
 // API routes
 $router->get('/api/farmers', 'FarmerController', 'index');

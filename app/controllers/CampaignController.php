@@ -20,7 +20,22 @@ class CampaignController extends Controller {
         $this->requireAuth();
         
         $campaigns = $this->campaignModel->getAll();
-        $this->json(['success' => true, 'data' => $campaigns]);
+        // Format campaigns for frontend
+        $formattedCampaigns = array_map(function($campaign) {
+            return [
+                'id' => $campaign['id'],
+                'title' => $campaign['title'],
+                'description' => $campaign['description'],
+                'campaign_type' => $campaign['campaign_type'],
+                'funding_goal' => (float)($campaign['funding_goal'] ?? 0),
+                'amount_raised' => (float)($campaign['amount_raised'] ?? 0),
+                'deadline' => $campaign['deadline'] ?? null,
+                'farmer_name' => $campaign['farmer_name'] ?? 'Unknown',
+                'status' => $campaign['status'] ?? 'active',
+                'supporters' => (int)($campaign['supporters'] ?? 0)
+            ];
+        }, $campaigns);
+        $this->json(['success' => true, 'campaigns' => $formattedCampaigns]);
     }
 
     public function create(): void {
@@ -30,11 +45,11 @@ class CampaignController extends Controller {
             $input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
             
             $data = [
-                'title' => $input['title'] ?? '',
-                'description' => $input['description'] ?? '',
-                'campaign_type' => $input['campaign_type'] ?? '',
-                'funding_goal' => (float)($input['funding_goal'] ?? 0),
-                'deadline' => $input['deadline'] ?? null,
+                'title' => $input['title'] ?? $input['campaignTitle'] ?? '',
+                'description' => $input['description'] ?? $input['campaignDescription'] ?? '',
+                'campaign_type' => $input['campaign_type'] ?? $input['campaignType'] ?? $input['type'] ?? '',
+                'funding_goal' => (float)($input['funding_goal'] ?? $input['fundingGoal'] ?? $input['campaignGoal'] ?? 0),
+                'deadline' => $input['deadline'] ?? $input['campaignDeadline'] ?? null,
                 'farmer_id' => $input['farmer_id'] ?? null,
                 'status' => 'active'
             ];

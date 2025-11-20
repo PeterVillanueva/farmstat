@@ -55,5 +55,25 @@ class DashboardController extends Controller {
             'farmers' => $farmers
         ]);
     }
+
+    public function apiData(): void {
+        header('Content-Type: application/json');
+        
+        $stats = [
+            'total_farmers' => $this->farmerModel->count(),
+            'active_crops' => 0, // TODO: Add active crops count
+            'total_funding' => $this->campaignModel->getTotalFunding(),
+            'yield_increase' => '156%' // TODO: Calculate from database
+        ];
+
+        // Get recent activities (simplified)
+        $activities = [];
+        
+        echo json_encode([
+            'success' => true,
+            'stats' => $stats,
+            'activities' => $activities
+        ]);
+    }
 }
 

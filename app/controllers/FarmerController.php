@@ -22,26 +22,35 @@ class FarmerController extends Controller {
         }
 
         $farmers = $this->farmerModel->getAll();
-        $this->json(['success' => true, 'data' => $farmers]);
+        $this->json(['success' => true, 'farmers' => $farmers]);
     }
 
     public function create(): void {
         $this->requireAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+            
+            // Handle varieties - could be comma-separated string or array
+            $varieties = $input['varieties'] ?? $input['rice_varieties'] ?? null;
+            if (is_string($varieties)) {
+                $varieties = explode(',', $varieties);
+            }
+            
             $data = [
-                'full_name' => $_POST['full_name'] ?? '',
-                'years_experience' => (int)($_POST['years_experience'] ?? 0),
-                'farm_location' => $_POST['farm_location'] ?? null,
-                'farm_size' => $_POST['farm_size'] ? (float)$_POST['farm_size'] : null,
-                'farming_method' => $_POST['farming_method'] ?? null,
-                'land_ownership' => $_POST['land_ownership'] ?? null,
-                'varieties' => $_POST['varieties'] ?? null
+                'full_name' => $input['full_name'] ?? $input['farmerName'] ?? '',
+                'years_experience' => (int)($input['years_experience'] ?? $input['experience_years'] ?? $input['farmerExperience'] ?? 0),
+                'farm_location' => $input['farm_location'] ?? $input['location'] ?? $input['farmerLocation'] ?? null,
+                'farm_size' => isset($input['farm_size']) ? (float)$input['farm_size'] : (isset($input['farmSize']) ? (float)$input['farmSize'] : null),
+                'farming_method' => $input['farming_method'] ?? $input['farmingMethod'] ?? null,
+                'land_ownership' => $input['land_ownership'] ?? $input['landOwnership'] ?? null,
+                'varieties' => $varieties
             ];
 
             try {
                 $id = $this->farmerModel->create($data);
-                $this->json(['success' => true, 'message' => 'Farmer created successfully', 'id' => $id]);
+                $farmer = $this->farmerModel->findById($id);
+                $this->json(['success' => true, 'message' => 'Farmer created successfully', 'id' => $id, 'farmer' => $farmer]);
             } catch (Exception $e) {
                 $this->json(['success' => false, 'error' => $e->getMessage()], 400);
             }

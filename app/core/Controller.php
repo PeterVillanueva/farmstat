@@ -32,6 +32,10 @@ class Controller {
     }
 
     protected function redirect(string $url): void {
+        // If URL doesn't start with http or https, add BASE_URL prefix
+        if (!preg_match('/^https?:\/\//', $url)) {
+            $url = BASE_URL . $url;
+        }
         header("Location: {$url}");
         exit;
     }

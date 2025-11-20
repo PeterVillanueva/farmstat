@@ -284,7 +284,7 @@ function loadPageData(pageName) {
 async function loadDashboardData() {
     try {
         console.log('Loading dashboard data...');
-        const response = await fetch('get_dashboard_data.php');
+        const response = await fetch('/farmstat/api/dashboard');
         
         if (!response.ok) {
             throw new Error('HTTP error! status: ' + response.status);
@@ -331,7 +331,7 @@ async function loadDashboardData() {
 async function loadFarmers() {
     try {
         console.log('Loading farmers data...');
-        const response = await fetch('get_farmers.php');
+        const response = await fetch('/farmstat/api/farmers');
         
         if (!response.ok) {
             throw new Error('HTTP error! status: ' + response.status);
@@ -395,7 +395,7 @@ async function loadFarmers() {
 async function loadCampaigns() {
     try {
         console.log('Loading campaigns data...');
-        const response = await fetch('get_campaigns.php');
+        const response = await fetch('/farmstat/api/campaigns');
         
         if (!response.ok) {
             throw new Error('HTTP error! status: ' + response.status);
@@ -519,7 +519,7 @@ async function handleAddFarmerSubmission(form) {
         submitBtn.textContent = 'Adding Farmer...';
         submitBtn.disabled = true;
 
-        const response = await fetch('add_farmer.php', {
+        const response = await fetch('/farmstat/api/farmers', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -580,7 +580,7 @@ async function handleCreateCampaignSubmission(form) {
         submitBtn.textContent = 'Creating Campaign...';
         submitBtn.disabled = true;
 
-        const response = await fetch('create_campaign.php', {
+        const response = await fetch('/farmstat/api/campaigns', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

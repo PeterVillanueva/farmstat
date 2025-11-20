@@ -87,5 +87,23 @@ class AuthController extends Controller {
         session_destroy();
         $this->redirect('/login');
     }
+
+    public function checkAuth(): void {
+        header('Content-Type: application/json');
+        
+        if (isset($_SESSION['user_id'])) {
+            echo json_encode([
+                'authenticated' => true,
+                'user_id' => $_SESSION['user_id'],
+                'user_name' => $_SESSION['user_name'] ?? '',
+                'user_email' => $_SESSION['user_email'] ?? '',
+                'user_role' => $_SESSION['user_role'] ?? 'farmer'
+            ]);
+        } else {
+            echo json_encode([
+                'authenticated' => false
+            ]);
+        }
+    }
 }
 

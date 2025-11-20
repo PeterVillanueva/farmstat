@@ -27,7 +27,7 @@ function initApp() {
 // Check authentication status from session
 function checkAuthStatus() {
     console.log('Checking authentication status...');
-    fetch('check_auth.php')
+    fetch('/farmstat/api/auth/check')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -850,7 +850,7 @@ function handleLogin(e) {
     formData.append('email', document.getElementById('loginEmail').value);
     formData.append('password', document.getElementById('loginPassword').value);
     
-    fetch('login.php', {
+    fetch('/farmstat/login', {
         method: 'POST',
         body: formData
     })
@@ -894,7 +894,7 @@ function handleSignup(e) {
     formData.append('confirm_password', document.getElementById('signupConfirm').value);
     formData.append('role', document.getElementById('signupRole').value);
     
-    fetch('register.php', {
+    fetch('/farmstat/register', {
         method: 'POST',
         body: formData
     })
@@ -915,8 +915,11 @@ function handleSignup(e) {
 }
 
 function handleLogout() {
-    fetch('logout.php')
-        .then(response => response.json())
+    fetch('/farmstat/logout')
+        .then(response => {
+            // Logout redirects, so just handle the redirect
+            window.location.href = '/farmstat/login';
+        })
         .then(data => {
             appState.currentUser = null;
             appState.isAuthenticated = false;
@@ -1064,7 +1067,7 @@ function showDemo() {
 
 // Data Loading Functions with Database Integration
 function loadDashboardData() {
-    fetch('get_dashboard_data.php')
+    fetch('/farmstat/api/dashboard')
         .then(response => response.json())
         .then(data => {
             updateDashboardStats(data);
@@ -1077,7 +1080,7 @@ function loadDashboardData() {
 
 function loadFarmersData() {
     console.log('Loading farmers data...');
-    fetch('get_farmers.php')
+    fetch('/farmstat/api/farmers')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -1096,7 +1099,7 @@ function loadFarmersData() {
 }
 
 function loadCampaignsData() {
-    fetch('get_campaigns.php')
+    fetch('/farmstat/api/campaigns')
         .then(response => response.json())
         .then(data => {
             appState.campaigns = data;
@@ -1360,7 +1363,7 @@ function handleAddFarmer(e) {
     
     console.log('Form data:', Object.fromEntries(formData));
     
-    fetch('add_farmer.php', {
+    fetch('/farmstat/api/farmers', {
         method: 'POST',
         body: formData
     })
@@ -1402,7 +1405,7 @@ function handleCreateCampaign(e) {
     formData.append('description', document.getElementById('campaignDescription').value);
     formData.append('deadline', document.getElementById('campaignDeadline').value);
     
-    fetch('create_campaign.php', {
+    fetch('/farmstat/api/campaigns', {
         method: 'POST',
         body: formData
     })

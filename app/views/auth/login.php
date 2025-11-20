@@ -22,7 +22,7 @@ require_once VIEWS_PATH . '/layouts/header.php';
         </div>
     <?php endif; ?>
 
-    <form method="POST" action="/login">
+    <form method="POST" action="<?php echo BASE_URL; ?>/login">
         <div class="user-type-selector">
             <div class="user-type-option">
                 <input type="radio" id="admin" name="user_type" value="admin" required>
@@ -70,7 +70,7 @@ require_once VIEWS_PATH . '/layouts/header.php';
     </form>
 
     <div class="register-link">
-        <p>Don't have an account? <a href="/register">Create one here</a></p>
+        <p>Don't have an account? <a href="<?php echo BASE_URL; ?>/register">Create one here</a></p>
     </div>
 </div>
 
